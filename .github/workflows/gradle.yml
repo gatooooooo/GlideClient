@@ -1,0 +1,30 @@
+name: Compile and upload build
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up java 8
+      uses: actions/setup-java@v4
+      with:
+          distribution: "zulu"
+          java-version: 8
+          cache: "gradle"
+
+    - name: Build with Gradle Wrapper
+      run: ./gradlew && ./gradlew build
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4.4.3
+      with:
+          name: GlideClient
+          path: build/libs/GlideClient-Release.jar
